@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:password_manager/src/pages/auth/login/main.dart';
+import 'package:password_manager/src/pages/home/main.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,9 +26,10 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: "/login",
+      initialRoute: "/home",
       routes: {
-        "/login": (context) => const LoginScreen()
+        "/login": (context) => const LoginScreen(),
+        "/home": (context) => const HoemScreen()
       },
     );
   }

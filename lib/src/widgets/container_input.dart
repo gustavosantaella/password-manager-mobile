@@ -1,9 +1,14 @@
+
 import 'package:flutter/material.dart';
 
 class ContainerInputWidget extends StatefulWidget {
   final String label;
-  final TextField input;
-  const ContainerInputWidget({this.label = "", this.input = const TextField(), super.key});
+  final String hintText;
+  final String helperText;
+  final bool obscureText;
+  
+  const ContainerInputWidget(
+      {this.label = "", this.helperText= "", this.hintText = "" , this.obscureText = false, super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -17,7 +22,7 @@ class _ContainerInputState extends State<ContainerInputWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(15),
       decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -26,11 +31,14 @@ class _ContainerInputState extends State<ContainerInputWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            widget.label,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          TextField(
+            obscureText: widget.obscureText,
+            decoration: InputDecoration(
+                
+                hintText: widget.hintText,
+                label: Text(widget.label),
+                 helperText: widget.helperText),
           ),
-         widget.input
         ],
       ),
     );
