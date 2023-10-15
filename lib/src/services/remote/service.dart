@@ -1,13 +1,16 @@
 import 'package:dio/dio.dart';
+import 'package:password_manager/src/services/local/user_service.dart';
 
-class Service {
-  late Dio http ;
-   Service() {
+abstract class Service {
+  late Dio http;
+  Service() {
     Dio dio = Dio();
-    dio.interceptors.add(InterceptorsWrapper(
-        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-      String token = "";
-      String baseUrl= "";
+    UserService userService = UserService();
+
+    dio.interceptors.add(InterceptorsWrapper(onRequest:
+        (RequestOptions options, RequestInterceptorHandler handler) async {
+      String? token = await userService.getToken();
+      String baseUrl = "";
       Map<String, dynamic> customHeaders = {
         'content-type': 'application/json',
         "Authorization": "Bearer $token",
@@ -17,7 +20,6 @@ class Service {
       options.headers.addAll(customHeaders);
     }));
 
-  
     http = dio;
   }
 }
