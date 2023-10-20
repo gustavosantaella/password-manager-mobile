@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:password_manager/src/pages/home/widgets/password_form.dart';
 import 'package:password_manager/src/services/remote/password_service.dart';
 
 class HoemScreen extends StatefulWidget {
@@ -12,16 +13,34 @@ class HoemScreen extends StatefulWidget {
 
 class _HomeState extends State<HoemScreen> {
   PasswordService passwordService = PasswordService();
+  List<dynamic> _passwords = [];
+  GlobalKey key = GlobalKey();
 
   @override
   void initState() {
-        super.initState();
-       passwordService.getMyPasswords();
+    super.initState();
+    passwordService.getMyPasswords().then((value) {
+      setState(() {
+        _passwords = value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: key,
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return const PasswordForm();
+
+                });
+          },
+        ),
         appBar: AppBar(
           title: const Text("Password List"),
         ),
@@ -30,24 +49,12 @@ class _HomeState extends State<HoemScreen> {
             heightFactor: 1,
             child: SafeArea(
               child: SizedBox(
-                child: Column(
+                child: Row(
                   children: [
-                    credentials(),
                     Expanded(
-                        child: Stack(
-                      children: [
-                        Positioned.fill(
-                            child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: Container(
-                              margin: const EdgeInsets.all(10),
-                              child: FloatingActionButton(
-                                onPressed: () {},
-                                child: const Icon(Icons.add),
-                              )),
-                        ))
-                      ],
-                    ))
+                      child: credentials(_passwords),
+                    ),
+                    //  Container()
                   ],
                 ),
               ),
@@ -55,11 +62,12 @@ class _HomeState extends State<HoemScreen> {
   }
 }
 
-Widget credentials() {
+Widget credentials(List<dynamic> passwords) {
   return SizedBox(
-    child: Column(
-      children: [
-        TextButton(
+      child: ListView(
+    children: [
+      ...passwords.map((e) {
+        return TextButton(
           onPressed: () {},
           child: SizedBox(
             width: double.infinity,
@@ -73,16 +81,17 @@ Widget credentials() {
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               "Account",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            Text("llxsantaellaxll@gmail.com"),
-                            Text("2020-03-03", style: TextStyle(fontSize: 10)),
+                            Text(e['username']),
+                            Text(e?['created_at'],
+                                style: const TextStyle(fontSize: 10)),
                           ],
                         ),
-                        const Icon(Icons.facebook)
+                        const Icon(Icons.lock)
                       ],
                     ),
                   ],
@@ -90,8 +99,8 @@ Widget credentials() {
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
+        );
+      }).toList()
+    ],
+  ));
 }

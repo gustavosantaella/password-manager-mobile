@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:password_manager/src/helpers/environment.dart';
 import 'package:password_manager/src/services/remote/service.dart';
 
 class UserService extends Service {
@@ -11,7 +12,8 @@ class UserService extends Service {
   }
   Future<String?> getToken() async {
 
-    return  _box.get("token");
+    return Environment.envs['tmp']['token'];
+    // return  _box.get("token");
 
   }
 }
