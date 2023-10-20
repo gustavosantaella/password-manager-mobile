@@ -1,8 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:password_manager/src/helpers/http.dart';
 import 'package:password_manager/src/pages/auth/login/main.dart';
 import 'package:password_manager/src/pages/home/main.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final Directory appDocumentDir =
+      await path_provider.getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDir.path);
+  Http();
   runApp(const MyApp());
 }
 
